@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "tailwindcss": "^3.3.3"
+  },
+  "scripts": {
+    "compile-css": "npx tailwindcss -i ecom/static/src/input.css -o ecom/static/src/output.css",
+    "dev": "npx tailwindcss -i ecom/static/src/input.css -o ecom/static/src/output.css --watch"
+  }
+}
