@@ -1,17 +1,26 @@
 from django.contrib import admin
-from .models import Product, Store, Category, CategoryAndProduct, CategoryAndStore
+from .models import Product, Store, Category, CategoryAndProduct, CategoryAndStore, Linker
 
 # Define the inline classes
 class CategoryAndProductInline(admin.TabularInline):
     model = CategoryAndProduct
     extra = 1  # Number of empty CategoryAndProduct forms to display
 
+class InventoryInline(admin.TabularInline):
+    model = Linker
+    extra = 1  # Number of empty CategoryAndProduct forms to display
+
+class CategoryInventoryInline(admin.TabularInline):
+    model = Linker
+    extra = 1  # Number of empty CategoryAndProduct forms to display
+    fields = ['product']
+
 class CategoryAndStoreInline(admin.TabularInline):
     model = CategoryAndStore
     extra = 1
 
 class ProductAdmin(admin.ModelAdmin):
-    inlines = [CategoryAndProductInline]
+    inlines = [InventoryInline]
     list_display = ('ProductName', 'display_stores', 'display_categories')
 
     def display_stores(self, obj):
@@ -32,7 +41,7 @@ class StoreAdmin(admin.ModelAdmin):
     inlines = [CategoryAndStoreInline]
 
 class CategoryAdmin(admin.ModelAdmin):
-    inlines = [CategoryAndStoreInline, CategoryAndProductInline]
+    inlines = [CategoryAndStoreInline, CategoryInventoryInline]
     list_display = ('CategoryName', 'display_stores')
 
     def display_stores(self, obj):
@@ -46,5 +55,3 @@ class CategoryAdmin(admin.ModelAdmin):
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Store, StoreAdmin)
 admin.site.register(Category, CategoryAdmin)
-# admin.site.register(CategoryAndProduct)
-# admin.site.register(CategoryAndStore)

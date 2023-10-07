@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.text import slugify
 
 class Store(models.Model):
-    Categories = models.ManyToManyField('Category', related_name='categories', through='CategoryAndStore')
+    Categories = models.ManyToManyField('Category', related_name='categories', through='Linker')
     StoreID = models.AutoField(primary_key=True)
     StoreName = models.CharField(max_length=30, default="")
 
@@ -13,7 +13,7 @@ class Store(models.Model):
         verbose_name_plural = "Stores"
 
 class Category(models.Model):
-    Products = models.ManyToManyField('Product', related_name='categories', through='CategoryAndProduct')
+    Products = models.ManyToManyField('Product', related_name='categories', through='Linker')
     CategoryID = models.AutoField(primary_key=True)
     CategoryName = models.CharField(max_length=30, default="")
     slug = models.SlugField(unique=True, default='')
@@ -52,8 +52,7 @@ class Product(models.Model):
 class CategoryAndProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=0)
-    
+
     def __str__(self):
         return f"{self.product.ProductName} at {self.category.CategoryName}"
     
@@ -63,3 +62,12 @@ class CategoryAndStore(models.Model):
 
     def __str__(self):
         return f"{self.store.StoreName} at {self.category.CategoryName}"
+
+class Linker(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.product.ProductName} at {self.category.CategoryName}"
